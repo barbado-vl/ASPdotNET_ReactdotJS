@@ -1,8 +1,12 @@
+using ASPdotNET_ReactdotJS.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSqlite<WebSiteContext>("Data Source=WebSiteContext.db");
+builder.Services.AddScoped<ItemsModelRepository>();
 
 var app = builder.Build();
 
