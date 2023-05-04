@@ -6,10 +6,10 @@ namespace ASPdotNET_ReactdotJS.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ItemsController : ControllerBase
+public class ItemController : ControllerBase
 {
     private readonly ItemsModelRepository itemsModelRepository;
-    public ItemsController(ItemsModelRepository itemsModelRepository)
+    public ItemController(ItemsModelRepository itemsModelRepository)
     {
         this.itemsModelRepository = itemsModelRepository;
     }
