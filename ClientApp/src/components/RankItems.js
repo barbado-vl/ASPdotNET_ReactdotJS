@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import MovieImageArr from "./MovieImages.js";
 import RankingGrid from "./RankingGrid";
+import ItemCollection from "./ItemCollection";
 
 const RankItems = () => {
     
     const [items, setItems] = useState([]);
     const dataType = 1;
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+        console.log(ev.type);                      // зашли
+    }
+
+    function allowDrop(ev) {
+        console.log(ev.type);                     // не зашли
+        ev.preventDefault();
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        console.log(ev.type);                    // не зашли
+        
+        const targetElm = ev.target;
+        if (targetElm.nodeName === "IMG") {
+            return false;
+        }
+        if (targetElm.childNodes.length === 0) {
+            var data = parseInt(ev.dataTransfer.getData("text").substring(5));
+            const transformedCollection = items.map((item) => (item.id === parseInt(data)) ?
+            { ...item, ranking: parseInt(targetElm.id.substring(5)) } : { ...item, ranking: item.ranking });
+            setItems(transformedCollection);
+        }
+    }
 
     useEffect(() => {
         fetch(`item/${dataType}`)
@@ -19,17 +46,8 @@ const RankItems = () => {
 
     return (
         <main>
-            <RankingGrid items={items} imgArr={MovieImageArr}/>
-            <div classNmae = "items-not-ranked">
-                {
-                    (items.length > 0)
-                    ? items.map((item) =>
-                        <div className = "unranked-cell">
-                            <img id={`item-${item.id}`} src={MovieImageArr.find(o => o.id === item.imageId)?.image } />
-                        </div> )                                                                                      //<h3>{item.title}</h3>
-                    : <div>Loading...</div>
-                }
-            </div>
+            <RankingGrid items={items} imgArr={MovieImageArr} drag={drag} allowDrop={allowDrop} drop={drop}/>
+            <ItemCollection items={items} drag={drag} imgArr={MovieImageArr} />
         </main>
     );
 };
