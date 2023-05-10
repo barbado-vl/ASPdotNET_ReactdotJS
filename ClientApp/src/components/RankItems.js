@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import MovieImageArr from "./MovieImages.js";
+﻿import {useEffect, useState } from 'react';
 import RankingGrid from "./RankingGrid";
 import ItemCollection from "./ItemCollection";
 
-const RankItems = () => {
-    
-    const [items, setItems] = useState([]);
-    const dataType = 1;
+const RankItems = ({items, setItems, dataType, imgArr, localStorageKey }) => {
 
-    function drag(ev) {
+    const [reload, setReload] = useState(false);
+
+    function Reload() {
+        setReload(true);
+    }
+
+    function drag(ev) { 
         ev.dataTransfer.setData("text", ev.target.id);
-        console.log(ev.type);                      // зашли
     }
 
     function allowDrop(ev) {
-        console.log(ev.type);                     // не зашли
         ev.preventDefault();
     }
 
     function drop(ev) {
+
         ev.preventDefault();
-        console.log(ev.type);                    // не зашли
-        
         const targetElm = ev.target;
         if (targetElm.nodeName === "IMG") {
             return false;
@@ -32,23 +31,48 @@ const RankItems = () => {
             { ...item, ranking: parseInt(targetElm.id.substring(5)) } : { ...item, ranking: item.ranking });
             setItems(transformedCollection);
         }
+
+    }
+    useEffect(() => {
+        if (items == null) {
+            getDataFromApi();
+        }
+
+    }, [dataType]);
+
+    function getDataFromApi() {
+        fetch(`item/${dataType}`)
+            .then((results) => {
+                return results.json();
+            })
+            .then(data => {
+
+                setItems(data);
+            })
     }
 
     useEffect(() => {
-        fetch(`item/${dataType}`)
-        .then((results) => {
-            return results.json();
-        })
-        .then(data => {
-            setItems(data);
-        })
-    }, []);
+        if (items != null) {
+            localStorage.setItem(localStorageKey, JSON.stringify(items));
+        }
+        setReload(false);
+    }, [items])
+
+    useEffect(() => {
+        if (reload === true) {
+            getDataFromApi();
+        }
+    },[reload])
+
 
     return (
-        <main>
-            <RankingGrid items={items} imgArr={MovieImageArr} drag={drag} allowDrop={allowDrop} drop={drop}/>
-            <ItemCollection items={items} drag={drag} imgArr={MovieImageArr} />
-        </main>
-    );
-};
+         (items != null)?
+            <main>
+                <RankingGrid items={items} imgArr={imgArr} drag={drag} allowDrop={allowDrop} drop={drop } />
+                <ItemCollection items={items} drag={drag} imgArr={imgArr} />
+                <button onClick={Reload} className="reload" style={{ "marginTop": "10px" }}> <span className="text" >Reload</span > </button>
+            </main>
+            : <main>Loading...</main>
+        )
+}
 export default RankItems;
