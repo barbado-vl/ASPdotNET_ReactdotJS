@@ -7,8 +7,6 @@ const RankingGrid = ({items, imgArr, drag, allowDrop, drop}) => {
     const cellCollectionBottom = [];
     const cellCollectionWorst = [];
 
-    console.log("ttttttttttttttttttt");                // test
-
     function pushCellMarkupToArr(cellCollection, rankNum, rowLabel) {
         if (rankNum > 0) {
             var item = items.find(o => o.ranking === rankNum);
@@ -81,7 +79,6 @@ const RankingGrid = ({items, imgArr, drag, allowDrop, drop}) => {
     return (
         <div className = "rankings">
             {createRankingGrid()}
-            <h2>stghdhyfyjgk</h2>
         </div>
     );
 };

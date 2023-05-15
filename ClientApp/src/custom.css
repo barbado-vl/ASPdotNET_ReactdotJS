@@ -84,7 +84,8 @@ main {
   background-color: red;
 }
 
-.reload {
+.reload,
+.auto-ranking {
   align-items: center;
   background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
   border: 0;
@@ -109,11 +110,14 @@ main {
 }
 
 .reload:active,
-.reload:hover {
+.reload:hover,
+.auto-ranking:active,
+.auto-ranking:hover {
   outline: 0;
 }
 
-.reload span {
+.reload span,
+.auto-ranking span {
   background-color: rgb(5, 6, 45);
   padding: 16px 24px;
   border-radius: 6px;
@@ -122,12 +126,14 @@ main {
   transition: 300ms;
 }
 
-.reload:hover span {
+.reload:hover span,
+.auto-ranking:hover span {
   background: none;
 }
 
 @media (min-width: 768px) {
-  .reload {
+  .reload,
+  .auto-ranking {
       font-size: 24px;
       min-width: 196px;
   }
